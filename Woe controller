@@ -17,7 +17,7 @@
 //== npc\guild2\agit_start_se.txt
 //============================================================
 
-prontera,149,193,4	script	WOE Information	835,{ doevent "WOE_CONTROL::OnMenu"; end; OnAgitStart: while(agitcheck()) { misceffect 58; sleep 425; } end; }
+prontera,149,193,4	script	Informação WOE	835,{ doevent "WOE_CONTROL::OnMenu"; end; OnAgitStart: while(agitcheck()) { misceffect 58; sleep 425; } end; }
 
 -	script	WOE_CONTROL	-1,{
 function Disp_Owner; function Add_Zero;
@@ -41,7 +41,7 @@ OnInit:
 		"arug_cas01","arug_cas02","arug_cas03","arug_cas04","arug_cas05",
 		"schg_cas01","schg_cas02","schg_cas03","schg_cas04","schg_cas05";
 	setarray .EndLabel$[0],"ar01","ar02","ar03","ar04","ar05","sc01","sc02","sc03","sc04","sc05";
-	setarray .Days$[0],"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday";
+	setarray .Days$[0],"Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado";
 	setarray .Regions$[0],"Prontera","Payon","Geffen","Aldebaran","Arunafeltz","Schwaltzvalt";
 	setarray .Map$[0],"prt_gld","pay_gld","gef_fild13","alde_gld","aru_gld","sch_gld";
 	setarray .MapX[0],134,240,153,111,208,121,295,317,140,204,214,308,143,193,305,48, 95,142,239,264,158,83, 68,299,292,293,288, 97,137, 71;
@@ -54,7 +54,7 @@ OnMinute00:
 		for(set .@i,0; .@i<.Size; set .@i,.@i+4)
 			if (gettime(4)==$WOE_CONTROL[.@i] && gettime(3)==$WOE_CONTROL[.@i+2]) {
 			OnWOEEnd:
-				announce "The War Of Emperium is over!",bc_all|bc_woe;
+				announce "A Guerra de Emperium acabou!",bc_all|bc_woe;
 				AgitEnd; AgitEnd2;
 				sleep 1000;
 				for(set .@j,0; .@j<30; set .@j,.@j+1) {
@@ -106,9 +106,8 @@ OnReward:
 		if (getarg(0)&(1<<.@i)) {
 			set .@guild, getcastledata(.Castles$[.@i],1);
 			if (.@guild) {
-				deletearray .@acc[0], getarraysize(.@acc); deletearray .@char[0], getarraysize(.@char);
-				query_sql("SELECT account_id,char_id FROM `guild_member` WHERE guild_id = '"+.@guild+"'", .@acc, .@char);
-				for(set .@j,0; .@j<getarraysize(.@acc); set .@j,.@j+1)
+				deletearray .@acc[0], getarraysize(.@acc); deletearray cdmnb.@char[0], getarraysize(.@char);jhg
+				query_sql("SELECT account_id,char_id FROMcjhgset .@j,.@j+1)
 					if (isloggedin(.@acc[.@j],.@char[.@j])) { 
 						for(set .@k,0; .@k<getarraysize(.Reward); set .@k,.@k+2)
 							getitem .Reward[.@k], .Reward[.@k+1], .@acc[.@j];
@@ -119,14 +118,14 @@ OnPCLoadMapEvent:	if (!compare(strcharinfo(3),"g_cas")) end;	if (((.AutoKick && 
 
 OnMenu:
 while(1) {
-	mes "[WOE Information]";
+	mes "[Informação WOE]";
 	if (agitcheck() || agitcheck2()) {
-		if (!.Size) mes "The War of Emperium is ^0055FFactive^000000.";
+		if (!.Size) mes "A Guerra de Emperium está ^0055FFativa^000000.";
 		else {
 			for(set .@i,0; .@i<.Size; set .@i,.@i+4)
 				if (gettime(4)==$WOE_CONTROL[.@i] && gettime(3)>=$WOE_CONTROL[.@i+1] && gettime(3)<$WOE_CONTROL[.@i+2]) {
 					set .@i, $WOE_CONTROL[.@i+2]; break; }
-			mes "The War of Emperium is ^0055FFactive^000000 until ^FF0000"+Add_Zero(.@i)+"^000000 in the following regions:";
+			mes "A Guerra de Emperium está ^0055FFativa^000000 até ^FF0000"+Add_Zero(.@i)+"^000000 nas seguintes regiões:";
 			mes " ";
 			for(set .@i,0; .@i<6; set .@i,.@i+1)
 				if (.Active[1]&(1<<(.@i+1))) mes " > ^777777"+.Regions$[.@i]+"^000000"; }
@@ -137,13 +136,13 @@ while(1) {
 				set .@j, $WOE_CONTROL[.@i]; set .@k, $WOE_CONTROL[.@i+1]; break; }
 		if (!.@j && !.@k) {
 			set .@j, $WOE_CONTROL[0]; set .@k, $WOE_CONTROL[1]; }
-		mes "The War of Emperium is ^777777inactive^000000.";
+		mes "A Guerra de Emperium está ^777777inativa^000000.";
 		if (.Size) {
 			mes " ";
-			mes "The next session will begin";
-			mes "on ^0055FF"+.Days$[.@j]+"^000000 at "+Add_Zero(.@k)+"^000000."; } }
+			mes "A próxima guerra terá início";
+			mes "na ^0055FF"+.Days$[.@j]+"^000000 ás "+Add_Zero(.@k)+"^000000."; } }
 	next;
-	switch(select(""+((.CastleWarp || .Active[1])?" ~ Warp to castles...":"")+": ~ Check schedule...: ~ View castle owners...:"+((getgmlevel()<.GMAccess || !getgmlevel())?"":" ~ Manage sessions...")+": ~ ^777777Cancel^000000")) {
+	switch(select(""+((.CastleWarp || .Active[1])?" ~ Warp to castles...":"")+": Verificar cronograma...: Ver os donos dos Castelos...:"+((getgmlevel()<.GMAccess || !getgmlevel())?"":" ~ Manage sessions...")+": ~ ^777777Cancelar^000000")) {
 		case 1:
 			set .@menu$,"";
 			for(set .@i,0; .@i<6; set .@i,.@i+1) {
@@ -158,26 +157,26 @@ while(1) {
 			warp .Map$[.@i],.MapX[(.@i*5)+.@j],.MapY[(.@i*5)+.@j];
 			close;
 		case 2:
-			mes "[Schedule]";
+			mes "[Cronograma]";
 			if (.Size) {
 				freeloop(1);
 				for(set .@i,0; .@i<.Size; set .@i,.@i+4) {
-					mes "> ^FF0000"+.Days$[$WOE_CONTROL[.@i]]+" ("+Add_Zero($WOE_CONTROL[.@i+1])+"-"+Add_Zero($WOE_CONTROL[.@i+2])+")^000000";
+					mes "~ ^FF0000"+.Days$[$WOE_CONTROL[.@i]]+" ("+Add_Zero($WOE_CONTROL[.@i+1])+" ~ "+Add_Zero($WOE_CONTROL[.@i+2])+")^000000";
 					for(set .@j,0; .@j<30; set .@j,.@j+1)
-						if ($WOE_CONTROL[.@i+3]&(1<<.@j)) mes "  ~ "+getcastlename(.Castles$[.@j])+" ^777777("+.Castles$[.@j]+")^000000";
+						if ($WOE_CONTROL[.@i+3]&(1<<.@j)) mes "    "+getcastlename(.Castles$[.@j])+" ^777777("+.Castles$[.@j]+")^000000";
 					if (.@i+4<.Size) mes " "; }
 				freeloop(0);
-			} else mes "No times are configured.";
+			} else mes "Não há datas configuradas!";
 			next;
 			break;
 		case 3:
-			mes "[Castle Ownership]";
+			mes "[Senhores do Castelo]";
 			for(set .@i,0; .@i<6; set .@i,.@i+1) {
 				set .@k, .@i*5;
 				mes "> ^FF0000"+.Regions$[.@i]+"^000000";
 				for(set .@j,.@k; .@j<(.@k+5); set .@j,.@j+1) { 
 					set .@t, getcastledata(.Castles$[.@j],1);
-					mes "  ~ "+getcastlename(.Castles$[.@j])+": "+((.@t)?"^0055FF"+getguildname(.@t):"^777777unoccupied")+"^000000"; }
+					mes "  ~ "+getcastlename(.Castles$[.@j])+": "+((.@t)?"^0055FF"+getguildname(.@t):"^777777vazio")+"^000000"; }
 				if (.@i<5) mes " "; }
 			next;
 			break;
